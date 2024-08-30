@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Status Checker</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        body {
+            background-color: #f7fafc;
+            font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;
+        }
+        .status-message {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        #currentTime {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+        #countdown {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="relative flex size-full min-h-screen flex-col bg-[#FFFFFF] justify-between group/design-root overflow-x-hidden">
+        <div class="p-4">
+            <h1 class="text-black tracking-light text-[32px] font-bold leading-tight text-center pb-3 pt-6">Website Status Checker</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-3">
+                    <h2 class="text-lg font-semibold">Vegetables King</h2>
+                    <div
+                      class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg"
+                      id="vegetablesKingImage"
+                      style='background-image: url("https://www.vegetablesking.in/logo149.png");'
+                    ></div>
+                    <p id="vegetablesKingStatus" class="status-message text-center"></p>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <h2 class="text-lg font-semibold">Render App</h2>
+                    <div
+                      class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg bg-gray-200 flex items-center justify-center"
+                      id="renderAppStatus"
+                    >
+                      <span class="text-2xl">Status</span>
+                    </div>
+                    <p id="renderAppStatusMessage" class="status-message text-center"></p>
+                </div>
+            </div>
+            <div class="flex gap-4 py-6">
+                <div class="flex grow basis-0 flex-col items-stretch gap-4">
+                    <div class="flex h-14 grow items-center justify-center rounded-lg px-3 bg-[#EEEEEE]">
+                        <p id="hours" class="text-black text-lg font-bold leading-tight tracking-[-0.015em]">00</p>
+                    </div>
+                    <div class="flex items-center justify-center"><p class="text-black text-sm font-normal leading-normal">Hours</p></div>
+                </div>
+                <div class="flex grow basis-0 flex-col items-stretch gap-4">
+                    <div class="flex h-14 grow items-center justify-center rounded-lg px-3 bg-[#EEEEEE]">
+                        <p id="minutes" class="text-black text-lg font-bold leading-tight tracking-[-0.015em]">00</p>
+                    </div>
+                    <div class="flex items-center justify-center"><p class="text-black text-sm font-normal leading-normal">Minutes</p></div>
+                </div>
+                <div class="flex grow basis-0 flex-col items-stretch gap-4">
+                    <div class="flex h-14 grow items-center justify-center rounded-lg px-3 bg-[#EEEEEE]">
+                        <p id="seconds" class="text-black text-lg font-bold leading-tight tracking-[-0.015em]">00</p>
+                    </div>
+                    <div class="flex items-center justify-center"><p class="text-black text-sm font-normal leading-normal">Seconds</p></div>
+                </div>
+            </div>
+        </div>
+        <div class="p-4">
+            <div class="flex flex-col gap-3">
+                <div class="flex gap-6 justify-between">
+                    <p class="text-black text-base font-medium leading-normal">Refreshing in</p>
+                </div>
+                <div class="rounded bg-[#DEDEDE]">
+                    <div id="progressBar" class="h-2 rounded bg-black" style="width: 100%;"></div>
+                </div>
+                <p id="countdown" class="text-[#6B6B6B] text-sm font-normal leading-normal text-center">14:00</p>
+            </div>
+            <p class="text-black text-base font-normal leading-normal pb-3 pt-1 text-center">The websites will be checked again in 14 minutes.</p>
+            <div class="h-5 bg-[#FFFFFF]"></div>
+        </div>
+    </div>
+
+    <script>
+        const vegetablesKingImage = document.getElementById('vegetablesKingImage');
+        const vegetablesKingStatus = document.getElementById('vegetablesKingStatus');
+        const renderAppStatus = document.getElementById('renderAppStatus');
+        const renderAppStatusMessage = document.getElementById('renderAppStatusMessage');
+        const hoursElement = document.getElementById('hours');
+        const minutesElement = document.getElementById('minutes');
+        const secondsElement = document.getElementById('seconds');
+        const countdownElement = document.getElementById('countdown');
+        const progressBar = document.getElementById('progressBar');
+
+        const refreshInterval = 14 * 60 * 1000; // 14 minutes in milliseconds
+        let countdownTime = refreshInterval;
+
+        function checkWebsites() {
+            console.log('Checking websites status...');
+
+            // Check Vegetables King
+            const img = new Image();
+            img.src = vegetablesKingImage.style.backgroundImage.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+
+            img.onload = function() {
+                console.log('Vegetables King is live.');
+                vegetablesKingStatus.textContent = "Website is live!";
+                vegetablesKingStatus.classList.add('text-green-500');
+                vegetablesKingStatus.classList.remove('text-red-500');
+            };
+
+            img.onerror = function() {
+                console.log('Vegetables King is down.');
+                vegetablesKingStatus.textContent = "Website is down.";
+                vegetablesKingStatus.classList.add('text-red-500');
+                vegetablesKingStatus.classList.remove('text-green-500');
+            };
+
+            // Check Render App
+            fetch('https://combine-keep-alive-with-internal-checks.onrender.com')
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Render App is live.');
+                        renderAppStatus.style.backgroundColor = '#4CAF50';
+                        renderAppStatus.innerHTML = '<span class="text-white text-2xl">Live</span>';
+                        renderAppStatusMessage.textContent = "Website is live!";
+                        renderAppStatusMessage.classList.add('text-green-500');
+                        renderAppStatusMessage.classList.remove('text-red-500');
+                    } else {
+                        throw new Error('Render App is down');
+                    }
+                })
+                .catch(error => {
+                    console.log('Render App is down:', error);
+                    renderAppStatus.style.backgroundColor = '#F44336';
+                    renderAppStatus.innerHTML = '<span class="text-white text-2xl">Down</span>';
+                    renderAppStatusMessage.textContent = "Website is down.";
+                    renderAppStatusMessage.classList.add('text-red-500');
+                    renderAppStatusMessage.classList.remove('text-green-500');
+                });
+
+            countdownTime = refreshInterval;
+            startCountdown();
+        }
+
+        function updateTime() {
+            const now = new Date();
+            hoursElement.textContent = now.getHours().toString().padStart(2, '0');
+            minutesElement.textContent = now.getMinutes().toString().padStart(2, '0');
+            secondsElement.textContent = now.getSeconds().toString().padStart(2, '0');
+        }
+
+        function updateCountdown() {
+            const minutes = Math.floor(countdownTime / 60000);
+            const seconds = Math.floor((countdownTime % 60000) / 1000);
+            countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            progressBar.style.width = `${(countdownTime / refreshInterval) * 100}%`;
+            countdownTime -= 1000;
+            if (countdownTime <= 0) {
+                console.log('Countdown finished. Checking websites again.');
+                checkWebsites();
+            }
+        }
+
+        function startCountdown() {
+            console.log(`Starting countdown for ${Math.floor(refreshInterval / 60000)} minutes.`);
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        function init() {
+            checkWebsites();
+            setInterval(updateTime, 1000);
+        }
+
+        init();
+    </script>
+</body>
+</html>
