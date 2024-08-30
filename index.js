@@ -1,9 +1,9 @@
 const cron = require('node-cron');
 const fetch = require('node-fetch');
 
-// URLs of your websites
-const REFRESH_PAGE_URL = 'https://your-refreshpage-url.com';
-const GROCERYSTORE_URL = 'https://www.vegetablesking.in';
+// Retrieve URLs from environment variables
+const REFRESH_PAGE_URL = process.env.REFRESH_PAGE_URL;
+const GROCERYSTORE_URL = process.env.GROCERYSTORE_URL;
 
 // Function to check if a website is active
 async function isWebsiteActive(url) {
