@@ -1,0 +1,13 @@
+{
+  "name": "website-refresh",
+  "version": "1.0.0",
+  "description": "A Node.js app to refresh websites periodically.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.2",
+    "node-fetch": "^3.0.0"
+  }
+}
